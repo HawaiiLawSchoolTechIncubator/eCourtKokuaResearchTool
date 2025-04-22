@@ -1,0 +1,102 @@
+<div class="case-details">
+    <button id="back-button" class="btn btn-secondary mb-3">
+        <i class="fas fa-arrow-left"></i> &#x21E6 Back to Case List
+    </button>
+    <div class="case-id-container">
+        <!--<h3 class="mb-3"><span id="case-number"></span><span id="case-name"></span></h3>-->
+        <h3 class="mb-3 d-flex justify-content-between w-100"><span id="case-number"></span><span id="case-name"></span></h3>
+        <!-- New warrant details button, only shown in warrant mode -->
+        <button id="warrant_recall_details_button" class="btn btn-sm btn-outline-primary ms-2" style="display: none;">
+            Enter Recall Details
+        </button>
+        <span id="overall-expungeability" class="badge"></span>
+    </div>
+    <div class="card mb-3">
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-6">
+                    <!--<p><strong>Case Name:</strong> <span id="case-name"></span></p>-->
+                    <p><strong>Case Type:</strong> <span id="case-type"></span></p>
+                    <p><strong>Court Location:</strong> <span id="court-location"></span></p>
+                    <p><strong>Filing Date:</strong> <span id="filing-date"></span></p>
+                </div>
+                <div class="col-md-6">
+                    <p><strong>Defendant Name:</strong> <span id="defendant-name"></span></p>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <h4 class="mb-3">Charges:</h4>
+    <div id="charges-container"></div>
+    <div id="additional-factors-container"></div>
+    <div id="warrant_recall_details_section" style="display: none;" class="mt-3">
+        <h5>Recall Details</h5>
+        <div class="card">
+            <div class="card-body">
+                <!-- Consultation Details -->
+                <div class="mb-3">
+                    <h6 class="form_label">Consultation Date</h6>
+                    <div class="row g-2">
+                        <div class="col-md-4">
+                            <input type="date" class="form-control" id="consultation_date_input" 
+                                   placeholder="Consultation Date">
+                        </div>
+                        <!-- <div class="col-md-4">
+                            <input type="text" class="form-control" id="consultation_town_input" 
+                                   placeholder="Consultation Town">
+                        </div> -->
+                    </div>
+                </div>
+                <!-- Consultation Event Description Phrase -->
+                <!-- e.g., "e.g., "attended the Expungement and Bench Warrant Clinic at Waianae Public Library" -->
+                <h6>“On that date, DEFENDANT <b><i>(describe consultation circumstances)</i></b> and requested that the bench warrant be recalled...”</h6>
+                    <div class="row g-2">
+                    <div class="col-md-4">
+                        <input type="text" class="form-control" id="consult_verb_phrase_input" 
+                            placeholder="e.g., attended the Bench Warrant Clinic at Waianae Public Library">
+                        </div>
+                </div>
+
+                <!-- Non-appearance Details -->
+                <div class="mb-3">
+                    <h6 class="form_label">Non-Appearance Date</h6>
+                    <div class="row g-2">
+                        <div class="col-md-12">
+                            <input type="date" class="form-control" id="non_appearance_date_input" 
+                                   placeholder="Non-appearance Date">
+                        </div>
+                    </div>
+                </div>
+    
+                <!-- Warrant Details -->
+                <div class="mb-3">
+                    <h6 class="form_label">Warrant Issue Date</h6>
+                    <div class="row g-2">
+                        <div class="col-md-6">
+                            <input type="date" class="form-control" id="warrant_issue_date_input" 
+                                   placeholder="Warrant Issue Date">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Warrant Amount -->
+                <div class="mb-3">
+                    <h6 class="form_label">Warrant Amount</h6>
+                    <div class="col-md-6">
+                        <div class="input-group">
+                            <span class="input-group-text">$</span>
+                            <input type="number" class="form-control" id="warrant_amount_input" 
+                                placeholder="Enter amount">
+                        </div>
+                    </div>
+                </div>
+    
+                <div class="btn-group">
+                    <button type="button" class="btn btn-primary" id="save_warrant_recall_details">Save</button>
+                    <button type="button" class="btn btn-danger" id="cancel_warrant_recall_details">Cancel</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,73 @@
+{
+  "manifest_version": 3,
+
+  "name": "eCourt Kokua Research Tool",
+  "description": "The extension that explores Hawaii court records.",
+  "version": "1.0",
+  "author": "Matthew Stubenberg and Benjamin Leider - University of Hawaii William S. Richardson School of Law",
+  "action": {
+    "default_icon": {
+      "16": "img/experiment_16dp_9B5278_FILL0_wght400_GRAD0_opsz20.png",
+      "24": "img/experiment_24dp_9B5278_FILL0_wght400_GRAD0_opsz24.png",
+      "32": "img/experiment_32dp_9B5278_FILL0_wght400_GRAD0_opsz40.png",
+      "64": "img/experiment_64dp_9B5278_FILL0_wght400_GRAD0_opsz48.png",
+      "128": "img/experiment_128dp_9B5278_FILL0_wght400_GRAD0_opsz48.png",
+      "256": "img/experiment_256dp_9B5278_FILL0_wght400_GRAD0_opsz48.png"
+    },
+    "default_popup": "index.html",
+    "default_title": "Kokua Research"
+  },
+  "icons": {
+    "16": "img/experiment_16dp_9B5278_FILL0_wght400_GRAD0_opsz20.png",
+    "24": "img/experiment_24dp_9B5278_FILL0_wght400_GRAD0_opsz24.png",
+    "32": "img/experiment_32dp_9B5278_FILL0_wght400_GRAD0_opsz40.png",
+    "64": "img/experiment_64dp_9B5278_FILL0_wght400_GRAD0_opsz48.png",
+    "128": "img/experiment_128dp_9B5278_FILL0_wght400_GRAD0_opsz48.png",
+    "256": "img/experiment_256dp_9B5278_FILL0_wght400_GRAD0_opsz48.png"
+  },
+  "host_permissions": [
+    "http://*.courts.state.hi.us/*",
+    "https://*.courts.state.hi.us/*"
+  ],
+  "permissions": ["tabs", "activeTab", "scripting", "storage", "webRequest"],
+  "background": {
+    "service_worker": "background.js"
+  },
+  "content_scripts": [
+    {
+      "matches": [
+        "http://*.courts.state.hi.us/*",
+        "https://*.courts.state.hi.us/*"
+      ],
+      "js": [
+        "error-handler.js",
+        "libs/bootstrap.bundle.min.js",
+        "libs/jquery-3.6.3.min.js",
+        "unified_cases.js",
+        "retrievalService.js",
+        "overview.js"
+      ],
+      "css": ["libs/bootstrap.min.css"]
+    }
+  ],
+  "web_accessible_resources": [
+    {
+      "resources": [
+        "generate_docs.js",
+        "libs/jquery-3.6.3.min.js",
+        "libs/bootstrap.bundle.min.js",
+        "libs/bootstrap.min.css",
+        "dialog.css",
+        "case-details.html",
+        "generate_docs.js",
+        "data_loaders.js",
+        "settings.json",
+        "ecourt_kokua_codes.json"
+      ],
+      "matches": [
+        "http://*.courts.state.hi.us/*",
+        "https://*.courts.state.hi.us/*"
+      ]
+    }
+  ]
+}
