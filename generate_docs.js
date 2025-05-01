@@ -808,31 +808,19 @@ const DocumentGenerator = (function () {
         return circuitNumberMap[ordinal] || ordinal;
       }
 
-    convertToMDYYYY(dateString) {
-      if (!dateString) return "";
-      let date = new Date(dateString);
-      
-      // Check if date is valid
+    convertToMMDDYYYY(dateString) {
+      // Convert to date object
+      const date = new Date(dateString);
+      // Check if the date is valid
       if (isNaN(date.getTime())) {
-        const parsedDate = dateString.split(',')[1] ? 
-        new Date(dateString.split(',')[1] + ',' + dateString.split(',')[2]) : 
-        new Date(dateString);
-        date = parsedDate;
+          return null; // Invalid date
       }
-
-      if (isNaN(date.getTime())) {
-        return "";
-      }
-
-      
-      // Format as MM/DD/YYYY
-      const month = (date.getMonth() + 1).toString().padStart(2, '0');
-      const day = date.getDate().toString().padStart(2, '0');
+      // Format the date to MM/DD/YYYY
+      const month = String(date.getMonth() + 1).padStart(2, '0'); // Months are zero-based
+      const day = String(date.getDate()).padStart(2, '0');
       const year = date.getFullYear();
-      
       return `${month}/${day}/${year}`;
     }
-
 
     getYear(dateString) {
       if (!dateString) return "";
@@ -948,13 +936,13 @@ const DocumentGenerator = (function () {
         for (const charge of caseObj.charges) {
             csv_rows.push({
               "Defendant": caseObj.DefendantName,
-              "Filing Date": caseObj.FilingDate,
+              "Filing Date": this.convertToMMDDYYYY(caseObj.FilingDate),
               "Case ID": caseObj.CaseNumber,
               "Case Title": caseObj.CaseName,
               "Case Type": caseObj.caseType,
               "Case Type Description": this.lookupCaseTypeDescription(caseObj.caseType),
               "Circuit": this.ordinalToCircuitNumber(caseObj.courtCircuit),
-              "Offense Date": charge.offenseDate,
+              "Offense Date": this.convertToMMDDYYYY(charge.offenseDate),
               "Citation/Arrest #": charge.citationArrestNumbers,
               "Count": charge.count,
               "Charge": charge.charge,
@@ -966,7 +954,6 @@ const DocumentGenerator = (function () {
               "Sentence Length": charge.sentenceLength,
               "Sentence Code": charge.sentenceCode,
               "Court Location": caseObj.CourtLocation,
-              
             })
           }
         }
