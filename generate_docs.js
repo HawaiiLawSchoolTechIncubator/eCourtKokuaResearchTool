@@ -796,7 +796,18 @@ const DocumentGenerator = (function () {
         };
       return ordinalPhraseMap[ordinal] || ordinal;
       }
-      
+
+      ordinalToCircuitNumber(ordinal) {
+        const circuitNumberMap = {
+          "first": 1,
+          "second": 2,
+          "third": 3,
+          "fourth": 4, // Not used in Hawaii
+          "fifth": 5
+        };
+        return circuitNumberMap[ordinal] || ordinal;
+      }
+
     convertToMDYYYY(dateString) {
       if (!dateString) return "";
       let date = new Date(dateString);
@@ -844,7 +855,7 @@ const DocumentGenerator = (function () {
       return `${year}`;
     }
 
-    // Better case type lookup
+    // Better case type lookup (from case number or description)
     lookupCaseTypeCode(caseNumber, caseTypeDescription) {
       const lookup = Object.entries(this.eCourtCodes.case_type).reduce(
         (acc, [code, type]) => {
@@ -891,6 +902,28 @@ const DocumentGenerator = (function () {
       return "";
     }
 
+    // Look up case type description from case type code
+    lookupCaseTypeDescription(caseTypeCode) {
+      // Create the lookup map: code -> description
+      const reverseLookup = Object.entries(this.eCourtCodes.case_type).reduce(
+        (acc, [code, description]) => {
+          // Use the first code found for a given description
+          if (!acc[code]) {
+            acc[code] = description;
+          }
+          return acc;
+        },
+        {}
+      );
+      if (reverseLookup[caseTypeCode]) {
+        return reverseLookup[caseTypeCode];
+      } else if (caseTypeCode.length >= 2) {
+        return reverseLookup[caseTypeCode.slice(-2)];
+      } else {
+        return caseTypeCode;
+      }
+    }
+
     unConvertSeverity(severity) {
       const severityToCode = {
         "misdemeanor": "MD",
@@ -914,24 +947,25 @@ const DocumentGenerator = (function () {
       for (const caseObj of cases) {
         for (const charge of caseObj.charges) {
             csv_rows.push({
-              //"Filing Date": caseObj.FilingDate,
-              'Case Init Year': this.getYear(caseObj.filingDate),
-              "Case Init Date": this.convertToMDYYYY(caseObj.filingDate),
+              "Defendant": caseObj.DefendantName,
+              "Filing Date": caseObj.FilingDate,
               "Case ID": caseObj.CaseNumber,
               "Case Title": caseObj.CaseName,
-              // Case Title
-              //"Case Type": this.getStrictCaseType(caseObj.CaseNumber),
-              "Case Type": this.lookupCaseTypeCode(caseObj.CaseNumber, caseObj.caseType),
-              "Court Location Code": this.ordinalToCircuitPhrase(caseObj.courtCircuit),
-              "Violation Date": this.convertToMDYYYY(charge.offenseDate),
+              "Case Type": caseObj.caseType,
+              "Case Type Description": this.lookupCaseTypeDescription(caseObj.caseType),
+              "Circuit": this.ordinalToCircuitNumber(caseObj.courtCircuit),
+              "Offense Date": charge.offenseDate,
               "Citation/Arrest #": charge.citationArrestNumbers,
-              "Charge": charge.statute,
-              "Type of Charge": this.unConvertSeverity(charge.severity),
-              "Description of the Charge": charge.charge,
+              "Count": charge.count,
+              "Charge": charge.charge,
+              "Severity": charge.severity,
+              "Statute": charge.statute,
               "Disposition": charge.dispositions.length > 0 ? charge.dispositions[charge.dispositions.length - 1] : "",
-              "Sentence": charge.sentence
-              //"Location": caseObj.CourtLocation,
-              //"Defendant": caseObj.DefendantName,
+              "Disposition Code": charge.dispositionCode,
+              "Sentence": charge.sentenceDescription,
+              "Sentence Length": charge.sentenceLength,
+              "Sentence Code": charge.sentenceCode,
+              "Court Location": caseObj.CourtLocation,
               
             })
           }
