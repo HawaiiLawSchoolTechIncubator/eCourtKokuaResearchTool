@@ -41,11 +41,7 @@
       ],
       "js": [
         "error-handler.js",
-        "libs/bootstrap.bundle.min.js",
-        "libs/jquery-3.6.3.min.js",
-        "unified_cases.js",
-        "retrievalService.js",
-        "overview.js"
+        "libs/bootstrap.bundle.min.js"
       ],
       "css": ["libs/bootstrap.min.css"]
     }

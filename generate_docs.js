@@ -928,6 +928,14 @@ const DocumentGenerator = (function () {
       return severityToCode[severity.toLowerCase()] || severity;
     }
 
+    concatenateParties(parties) {
+      let concatPartiesArr = [];
+      for (const party of parties) {
+        concatPartiesArr.push(`${party.role} ${party.name} ID ${party.id}`);
+      }
+      return concatPartiesArr.join("; ");
+    }
+
     // GENERATE CSV
     async generateResearchCsv(cases) {
       // Matching North Carolina Prof's field names & format
@@ -954,6 +962,7 @@ const DocumentGenerator = (function () {
               "Sentence Length": charge.sentenceLength,
               "Sentence Code": charge.sentenceCode,
               "Court Location": caseObj.CourtLocation,
+              "Parties": this.concatenateParties(caseObj.parties),
             })
           }
         }

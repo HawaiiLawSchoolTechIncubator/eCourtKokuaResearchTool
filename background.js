@@ -12,16 +12,53 @@ async function getTab() {
 chrome.tabs.onUpdated.addListener(function(tabId, changeInfo, tab) {
   // Check if the URL matches and the page has finished loading
   if (tab.url === "http://jimspss1.courts.state.hi.us:8080/eCourt/ECC/PartyNameSearch.iface" && changeInfo.status === 'complete') {
-    // Inject the script
-    console.log("Injecting Script");
+    // Inject all scripts in sequence
+    console.log("Injecting Overview Scripts for URL detection");
     getTab().then(function(tab){
-      chrome.scripting.executeScript({
-          target : {tabId : tab.id},
-          files: ["libs/jquery-3.6.3.min.js","overview.js","global_cases.js"]
+      // Inject scripts in a specific order with callbacks
+      const injectScriptSequence = [
+        "libs/jquery-3.6.3.min.js",
+        "utils.js",
+        "docketService.js", 
+        "expungeabilityEvaluator.js",
+        "caseProcessors/baseCaseProcessor.js",
+        "caseProcessors/arCaseProcessor.js",
+        "caseProcessors/dtaCaseProcessor.js",
+        "caseProcessors/dccCaseProcessor.js",
+        "caseProcessors/ffcCaseProcessor.js",
+        "caseProcessors/pcCaseProcessor.js",
+        "caseProcessors/dcwCaseProcessor.js",
+        "caseProcessors/dtcCaseProcessor.js",
+        "caseProcessors/cpcCaseProcessor.js",
+        "unified_cases.js", 
+        "retrievalService.js",
+        "global_cases.js",
+        "overview.js"
+      ];
+      
+      // Function to inject scripts in sequence
+      function injectNextScript(index) {
+        if (index >= injectScriptSequence.length) {
+          console.log("All scripts injected successfully");
+          return;
+        }
+        
+        const script = injectScriptSequence[index];
+        console.log(`Injecting script ${index + 1}/${injectScriptSequence.length}: ${script}`);
+        
+        chrome.scripting.executeScript({
+          target: {tabId: tab.id},
+          files: [script]
+        }, function() {
+          console.log(`Script injected: ${script}`);
+          injectNextScript(index + 1);
         });
-    
-  })
-  .catch((reason) => console.log("Error" + reason.message));
+      }
+      
+      // Start the injection sequence
+      injectNextScript(0);
+    })
+    .catch((reason) => console.log("Error" + reason.message));
   }
 
   if (tab.url.includes("http://jimspss1.courts.state.hi.us:8080/eCourt/ECC") && changeInfo.status === 'complete') {
@@ -35,7 +72,7 @@ chrome.tabs.onUpdated.addListener(function(tabId, changeInfo, tab) {
 chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
   if (request.action == "check_expungeability"){
     //Checks to see if an individual case is eligible for expungement
-    //This calls a file called "global_cases.js" which calls unified_cases to determine the case type (DTC, DCW, CPC, etc.) and process the case.
+    //Inject all scripts in one context
       console.log("Injecting Expungeability Content Script");
       getTab().then(function(tab){
           console.log("Tab Info:");
@@ -43,20 +80,96 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
           console.log("Read tab");
           console.log(tab.url);
           console.log("Read tab.url")
-          chrome.scripting.executeScript({
-              target : {tabId : tab.id},
-              files: ["libs/jquery-3.6.3.min.js","global_cases.js","unified_cases.js","expungeable.js"]
+          
+          // Inject scripts in a specific order with callbacks
+          const injectScriptSequence = [
+            "libs/jquery-3.6.3.min.js",
+            "utils.js",
+            "docketService.js",
+            "expungeabilityEvaluator.js", 
+            "caseProcessors/baseCaseProcessor.js",
+            "caseProcessors/arCaseProcessor.js",
+            "caseProcessors/dtaCaseProcessor.js",
+            "caseProcessors/dccCaseProcessor.js",
+            "caseProcessors/ffcCaseProcessor.js",
+            "caseProcessors/pcCaseProcessor.js",
+            "caseProcessors/dcwCaseProcessor.js",
+            "caseProcessors/dtcCaseProcessor.js",
+            "caseProcessors/cpcCaseProcessor.js",
+            "unified_cases.js",
+            "global_cases.js",
+            "expungeable.js"
+          ];
+          
+          // Function to inject scripts in sequence
+          function injectNextScript(index) {
+            if (index >= injectScriptSequence.length) {
+              console.log("All scripts injected successfully");
+              return;
+            }
+            
+            const script = injectScriptSequence[index];
+            console.log(`Injecting script ${index + 1}/${injectScriptSequence.length}: ${script}`);
+            
+            chrome.scripting.executeScript({
+              target: {tabId: tab.id},
+              files: [script]
+            }, function() {
+              console.log(`Script injected: ${script}`);
+              injectNextScript(index + 1);
             });
+          }
+          
+          // Start the injection sequence
+          injectNextScript(0);
       })
       .catch((reason) => console.log("Error" + reason.message));
   } else if(request.action == "overview_page"){
-    //If the call is for the overview page run the overview.js file.
-      console.log("Injecting Overview Content Script");
+    //If the call is for the overview page, inject all scripts
+      console.log("Injecting Overview Content Scripts");
       getTab().then(function(tab){
-          chrome.scripting.executeScript({
-          target : {tabId : tab.id},
-          files: ["libs/jquery-3.6.3.min.js","overview.js","global_cases.js"]
-        });
+          // Inject scripts in a specific order with callbacks
+          const injectScriptSequence = [
+            "libs/jquery-3.6.3.min.js",
+            "utils.js",
+            "docketService.js", 
+            "expungeabilityEvaluator.js",
+            "caseProcessors/baseCaseProcessor.js",
+            "caseProcessors/arCaseProcessor.js",
+            "caseProcessors/dtaCaseProcessor.js",
+            "caseProcessors/dccCaseProcessor.js",
+            "caseProcessors/ffcCaseProcessor.js",
+            "caseProcessors/pcCaseProcessor.js",
+            "caseProcessors/dcwCaseProcessor.js",
+            "caseProcessors/dtcCaseProcessor.js",
+            "caseProcessors/cpcCaseProcessor.js",
+            "unified_cases.js", 
+            "retrievalService.js",
+            "global_cases.js",
+            "overview.js"
+          ];
+          
+          // Function to inject scripts in sequence
+          function injectNextScript(index) {
+            if (index >= injectScriptSequence.length) {
+              console.log("All scripts injected successfully");
+              return;
+            }
+            
+            const script = injectScriptSequence[index];
+            console.log(`Injecting script ${index + 1}/${injectScriptSequence.length}: ${script}`);
+            
+            chrome.scripting.executeScript({
+              target: {tabId: tab.id},
+              files: [script]
+            }, function() {
+              console.log(`Script injected: ${script}`);
+              injectNextScript(index + 1);
+            });
+          }
+          
+          // Start the injection sequence
+          injectNextScript(0);
       })
       .catch((reason) => console.log("Error at line " + reason.lineNumber + ": " + reason.message));
   } else if(request.action === "injectCSS") {
