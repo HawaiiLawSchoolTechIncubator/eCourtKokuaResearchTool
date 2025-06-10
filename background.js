@@ -12,8 +12,7 @@ async function getTab() {
 chrome.tabs.onUpdated.addListener(function(tabId, changeInfo, tab) {
   // Check if the URL matches and the page has finished loading
   if (tab.url === "http://jimspss1.courts.state.hi.us:8080/eCourt/ECC/PartyNameSearch.iface" && changeInfo.status === 'complete') {
-    // Inject all scripts in sequence
-    console.log("Injecting Overview Scripts for URL detection");
+    // Inject all scripts in sequence    console.log("Injecting Overview Scripts for URL detection");
     getTab().then(function(tab){
       // Inject scripts in a specific order with callbacks
       const injectScriptSequence = [
@@ -25,6 +24,7 @@ chrome.tabs.onUpdated.addListener(function(tabId, changeInfo, tab) {
         "caseProcessors/arCaseProcessor.js",
         "caseProcessors/dtaCaseProcessor.js",
         "caseProcessors/dccCaseProcessor.js",
+        "caseProcessors/dtiCaseProcessor.js",
         "caseProcessors/ffcCaseProcessor.js",
         "caseProcessors/pcCaseProcessor.js",
         "caseProcessors/dcwCaseProcessor.js",
@@ -80,8 +80,7 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
           console.log("Read tab");
           console.log(tab.url);
           console.log("Read tab.url")
-          
-          // Inject scripts in a specific order with callbacks
+            // Inject scripts in a specific order with callbacks
           const injectScriptSequence = [
             "libs/jquery-3.6.3.min.js",
             "utils.js",
@@ -91,6 +90,7 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
             "caseProcessors/arCaseProcessor.js",
             "caseProcessors/dtaCaseProcessor.js",
             "caseProcessors/dccCaseProcessor.js",
+            "caseProcessors/dtiCaseProcessor.js",
             "caseProcessors/ffcCaseProcessor.js",
             "caseProcessors/pcCaseProcessor.js",
             "caseProcessors/dcwCaseProcessor.js",
@@ -124,8 +124,7 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
           injectNextScript(0);
       })
       .catch((reason) => console.log("Error" + reason.message));
-  } else if(request.action == "overview_page"){
-    //If the call is for the overview page, inject all scripts
+  } else if(request.action == "overview_page"){    //If the call is for the overview page, inject all scripts
       console.log("Injecting Overview Content Scripts");
       getTab().then(function(tab){
           // Inject scripts in a specific order with callbacks
@@ -138,6 +137,7 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
             "caseProcessors/arCaseProcessor.js",
             "caseProcessors/dtaCaseProcessor.js",
             "caseProcessors/dccCaseProcessor.js",
+            "caseProcessors/dtiCaseProcessor.js",
             "caseProcessors/ffcCaseProcessor.js",
             "caseProcessors/pcCaseProcessor.js",
             "caseProcessors/dcwCaseProcessor.js",
